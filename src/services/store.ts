@@ -10,12 +10,18 @@ import ingredientsReducer from './slices/ingredientsSlice';
 import constructorReducer from './slices/constructorSlice';
 import orderReducer from './slices/orderSlice';
 import feedReducer from './slices/feedSlice';
+import userReducer from './slices/userSlice';
+import ordersReducer from './slices/ordersSlice';
+import orderInfoReducer from './slices/orderInfoSlice';
 
 const rootReducer = {
   ingredients: ingredientsReducer,
   burgerConstructor: constructorReducer,
   order: orderReducer,
-  feed: feedReducer
+  orders: ordersReducer,
+  orderInfo: orderInfoReducer,
+  feed: feedReducer,
+  user: userReducer
 };
 
 const store = configureStore({

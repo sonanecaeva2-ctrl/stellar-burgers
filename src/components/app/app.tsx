@@ -21,6 +21,15 @@ import {
   selectIngredientsError,
   fetchIngredients
 } from '../../services/slices/ingredientsSlice';
+import {
+  fetchGetUser,
+  setIsAuthChecked
+} from '../../services/slices/userSlice';
+
+import { OrderModal, OrderPage } from '@components';
+
+import { ProtectedRoute } from '../../components/protected-route/protected-route';
+import { PublicRoute } from '../../components/public-route/public-route';
 
 import { AppHeader } from '@components';
 import { Preloader } from '@ui';
@@ -39,24 +48,37 @@ const App = () => {
 
   useEffect(() => {
     dispatch(fetchIngredients());
+
+    const refreshToken = localStorage.getItem('refreshToken');
+
+    if (refreshToken) {
+      dispatch(fetchGetUser());
+    } else {
+      dispatch(setIsAuthChecked(true));
+    }
   }, [dispatch]);
 
   return (
     <div className={styles.app}>
       <AppHeader />
       <Routes location={background || location}>
+        <Route element={<PublicRoute />}>
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='/forgot-password' element={<ForgotPassword />} />
+          <Route path='/reset-password' element={<ResetPassword />} />
+        </Route>
+
+        <Route element={<ProtectedRoute />}>
+          <Route path='/profile' element={<Profile />} />
+          <Route path='/profile/orders' element={<ProfileOrders />} />
+          <Route path='/profile/orders/:number' element={<OrderPage />} />
+        </Route>
+
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/register' element={<Register />} />
-        <Route path='/forgot-password' element={<ForgotPassword />} />
-        <Route path='/reset-password' element={<ResetPassword />} />
-        <Route path='/profile' element={<Profile />} />
-        <Route path='/profile/orders' element={<ProfileOrders />} />
-        <Route path='*' element={<NotFound404 />} />
         <Route path='/ingredients/:id' element={<IngredientDetails />} />
-        <Route path='/feed/:number' element={<OrderInfo />} />
-        <Route path='/profile/orders/:number' element={<OrderInfo />} />
+        <Route path='*' element={<NotFound404 />} />
       </Routes>
 
       {background && (
@@ -69,22 +91,8 @@ const App = () => {
               </Modal>
             }
           />
-          <Route
-            path='/feed/:number'
-            element={
-              <Modal title='' onClose={() => navigate(-1)}>
-                <OrderInfo />
-              </Modal>
-            }
-          />
-          <Route
-            path='/profile/orders/:number'
-            element={
-              <Modal title='' onClose={() => navigate(-1)}>
-                <OrderInfo />
-              </Modal>
-            }
-          />
+          <Route path='/feed/:number' element={<OrderModal />} />
+          <Route path='/profile/orders/:number' element={<OrderModal />} />
         </Routes>
       )}
     </div>
