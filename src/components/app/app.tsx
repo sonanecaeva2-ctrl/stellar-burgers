@@ -92,7 +92,9 @@ const App = () => {
             }
           />
           <Route path='/feed/:number' element={<OrderModal />} />
-          <Route path='/profile/orders/:number' element={<OrderModal />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path='/profile/orders/:number' element={<OrderModal />} />
+          </Route>
         </Routes>
       )}
     </div>
