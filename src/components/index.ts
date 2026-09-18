@@ -12,3 +12,5 @@ export * from './order-info';
 export * from './order-status';
 export * from './orders-list';
 export * from './profile-menu';
+export * from './order-modal/order-modal';
+export * from './order-page/order-page';

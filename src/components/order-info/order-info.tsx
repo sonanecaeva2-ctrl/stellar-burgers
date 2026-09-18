@@ -1,21 +1,31 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useEffect } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
+import { useSelector, useDispatch } from '../../services/store';
+import { useParams } from 'react-router-dom';
+import { selectIngredients } from '../../services/slices/ingredientsSlice';
+import {
+  selectOrderData,
+  selectOrderInfoLoading,
+  fetchOrderByNumber
+} from '../../services/slices/orderInfoSlice';
 
 export const OrderInfo: FC = () => {
   /** TODO: взять переменные orderData и ingredients из стора */
-  const orderData = {
-    createdAt: '',
-    ingredients: [],
-    _id: '',
-    status: '',
-    name: '',
-    updatedAt: 'string',
-    number: 0
-  };
 
-  const ingredients: TIngredient[] = [];
+  const { number } = useParams();
+  const dispatch = useDispatch();
+  const orderData = useSelector(selectOrderData);
+  const ingredients = useSelector(selectIngredients);
+
+  useEffect(() => {
+    if (number) {
+      dispatch(fetchOrderByNumber(Number(number)));
+    }
+  }, [dispatch, number]);
+
+  const isLoading = useSelector(selectOrderInfoLoading);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
@@ -59,8 +69,12 @@ export const OrderInfo: FC = () => {
     };
   }, [orderData, ingredients]);
 
-  if (!orderInfo) {
+  if (isLoading) {
     return <Preloader />;
+  }
+
+  if (!orderInfo) {
+    return <div>Заказ не найден</div>; // ← добавить
   }
 
   return <OrderInfoUI orderInfo={orderInfo} />;

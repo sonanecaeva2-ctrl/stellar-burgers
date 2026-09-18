@@ -12,6 +12,8 @@
   border-radius: 40px;
   min-width: 576px;
   box-sizing: border-box;
+  position: relative;
+  z-index: 10;
 }
 
 .order_info {
