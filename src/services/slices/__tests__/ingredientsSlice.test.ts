@@ -41,27 +41,21 @@ describe('ingredientsReducer', () => {
   });
 
   test('должен установить isIngredientsLoading = true при pending', () => {
-    const action = { type: fetchIngredients.pending.type };
+    const action = fetchIngredients.pending('', undefined);
     const state = ingredientsReducer(initialState, action);
     expect(state.isIngredientsLoading).toBe(true);
     expect(state.error).toBe(null);
   });
 
   test('должен сохранить ингредиенты при fulfilled', () => {
-    const action = {
-      type: fetchIngredients.fulfilled.type,
-      payload: mockIngredients
-    };
+    const action = fetchIngredients.fulfilled(mockIngredients, '', undefined);
     const state = ingredientsReducer(initialState, action);
     expect(state.isIngredientsLoading).toBe(false);
     expect(state.ingredients).toEqual(mockIngredients);
   });
 
   test('должен установить ошибку при rejected', () => {
-    const action = {
-      type: fetchIngredients.rejected.type,
-      error: { message: 'Ошибка загрузки' }
-    };
+    const action = fetchIngredients.rejected(new Error('Ошибка загрузки'), '');
     const state = ingredientsReducer(initialState, action);
     expect(state.isIngredientsLoading).toBe(false);
     expect(state.error).toBe('Ошибка загрузки');
