@@ -36,6 +36,20 @@ const mockMain: TIngredient = {
   image_large: 'https://code.s3.yandex.net/react/code/meat-01-large.png'
 };
 
+const mockSauce: TIngredient = {
+  _id: '643d69a5c3f7b9001cfa0942',
+  name: 'Соус Spicy-X',
+  type: 'sauce',
+  proteins: 30,
+  fat: 20,
+  carbohydrates: 40,
+  calories: 30,
+  price: 90,
+  image: 'https://code.s3.yandex.net/react/code/sauce-02.png',
+  image_mobile: 'https://code.s3.yandex.net/react/code/sauce-02-mobile.png',
+  image_large: 'https://code.s3.yandex.net/react/code/sauce-02-large.png'
+};
+
 describe('constructorReducer', () => {
   test('должен вернуть начальное состояние при неизвестном экшене', () => {
     expect(constructorReducer(undefined, { type: 'UNKNOWN' })).toEqual(
@@ -81,17 +95,17 @@ describe('constructorReducer', () => {
 
   test('должен поменять ингредиенты местами', () => {
     const state1 = constructorReducer(initialState, addIngredient(mockMain));
-    const state2 = constructorReducer(state1, addIngredient(mockBun));
+    const state2 = constructorReducer(state1, addIngredient(mockSauce));
 
     expect(state2.ingredients[0]._id).toBe(mockMain._id);
-    expect(state2.ingredients[1]._id).toBe(mockBun._id);
+    expect(state2.ingredients[1]._id).toBe(mockSauce._id);
 
     const state3 = constructorReducer(
       state2,
       moveIngredient({ fromIndex: 0, toIndex: 1 })
     );
 
-    expect(state3.ingredients[0]._id).toBe(mockBun._id);
+    expect(state3.ingredients[0]._id).toBe(mockSauce._id);
     expect(state3.ingredients[1]._id).toBe(mockMain._id);
   });
 });
